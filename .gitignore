@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.spec.bak
+
+# Datos sensibles — NUNCA subir
+config.json
+sisfe_state.json
+sisfe_monitor.log
+license/licencias_emitidas.json
+
+# Playwright
+screenshots/
+
+# PyInstaller output
+dist/
+build/
+Output/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Mac
+.DS_Store
