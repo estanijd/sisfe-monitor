@@ -13,8 +13,15 @@ from datetime import datetime
 BASE_DIR = Path(__file__).parent
 sys.path.insert(0, str(BASE_DIR))
 
-# ── Logging ───────────────────────────────────────────────────────────────────
-LOG_FILE = BASE_DIR / "sisfe_monitor.log"
+# ── Logging — guardar en AppData en Windows ───────────────────────────────────
+import os as _os
+_appdata = _os.environ.get("APPDATA", "")
+if _appdata:
+    _log_dir = Path(_appdata) / "SISFEMonitor"
+    _log_dir.mkdir(parents=True, exist_ok=True)
+    LOG_FILE = _log_dir / "sisfe_monitor.log"
+else:
+    LOG_FILE = BASE_DIR / "sisfe_monitor.log"
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s  %(levelname)-8s  %(message)s",
@@ -45,7 +52,20 @@ def run():
         logger.error("Agente no configurado. Abre SISFE Monitor para configurarlo.")
         return
 
-    # ── 2. Determinar tipo de envio ───────────────────────────────────────
+    # ── 2. Verificar límite de cuentas según licencia ─────────────────────
+    from license.validator import get_license_info
+    lic_info   = get_license_info(code)
+    max_cuentas = lic_info.get("max_cuentas", 2) if lic_info else 2
+    cuentas_cfg = config.get("cuentas", [])
+
+    if len(cuentas_cfg) > max_cuentas:
+        logger.warning(
+            f"Licencia permite {max_cuentas} cuenta(s) pero hay {len(cuentas_cfg)} configuradas. "
+            f"Solo se procesarán las primeras {max_cuentas}."
+        )
+        config["cuentas"] = cuentas_cfg[:max_cuentas]
+
+    # ── 3. Determinar tipo de envio ───────────────────────────────────────
     horarios = config.get("horarios", [
         {"hora": "09:00"}, {"hora": "14:00"}, {"hora": "20:00"}
     ])

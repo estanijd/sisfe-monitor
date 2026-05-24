@@ -33,12 +33,13 @@ def guardar_registro(registro: list):
     )
 
 
-def generar(nombre: str, email: str, vencimiento=None) -> str:
+def generar(nombre: str, email: str, vencimiento=None, max_cuentas: int = 2) -> str:
     datos = {
-        "producto":    "SISFE_MONITOR",
-        "nombre":      nombre,
-        "email":       email,
-        "emitida":     date.today().isoformat(),
+        "producto":     "SISFE_MONITOR",
+        "nombre":       nombre,
+        "email":        email,
+        "emitida":      date.today().isoformat(),
+        "max_cuentas":  max_cuentas,
     }
     if vencimiento:
         datos["vencimiento"] = vencimiento
@@ -57,9 +58,10 @@ def main():
     parser = argparse.ArgumentParser(description="Generador de licencias SISFE Monitor")
     parser.add_argument("nombre", nargs="?", help="Nombre del cliente")
     parser.add_argument("email",  nargs="?", help="Email del cliente")
-    parser.add_argument("--vence", metavar="YYYY-MM-DD", help="Fecha de vencimiento (opcional)")
-    parser.add_argument("--lista", action="store_true", help="Ver licencias emitidas")
-    parser.add_argument("--validar", metavar="CODIGO", help="Validar un codigo existente")
+    parser.add_argument("--vence",      metavar="YYYY-MM-DD", help="Fecha de vencimiento (opcional)")
+    parser.add_argument("--cuentas",   metavar="N", type=int, default=2, help="Máximo de cuentas SISFE (default: 2)")
+    parser.add_argument("--lista",     action="store_true", help="Ver licencias emitidas")
+    parser.add_argument("--validar",   metavar="CODIGO", help="Validar un codigo existente")
     args = parser.parse_args()
 
     if args.lista:
@@ -67,13 +69,14 @@ def main():
         if not registro:
             print("No hay licencias emitidas.")
             return
-        print(f"\n{'─'*70}")
-        print(f"{'NOMBRE':<25} {'EMAIL':<30} {'VENCE':<12} {'EMITIDA'}")
-        print(f"{'─'*70}")
+        print(f"\n{'─'*75}")
+        print(f"{'NOMBRE':<22} {'EMAIL':<28} {'CUENTAS':<9} {'VENCE':<12} {'EMITIDA'}")
+        print(f"{'─'*75}")
         for lic in registro:
-            vence = lic.get('vencimiento', 'Perpetua')
-            print(f"{lic['nombre']:<25} {lic['email']:<30} {vence:<12} {lic['emitida']}")
-        print(f"{'─'*70}")
+            vence    = lic.get('vencimiento', 'Perpetua')
+            max_c    = lic.get('max_cuentas', 2)
+            print(f"{lic['nombre']:<22} {lic['email']:<28} {max_c:<9} {vence:<12} {lic['emitida']}")
+        print(f"{'─'*75}")
         print(f"Total: {len(registro)} licencia(s)\n")
         return
 
@@ -87,14 +90,18 @@ def main():
         parser.print_help()
         return
 
-    code = generar(args.nombre, args.email, args.vence)
+    code = generar(args.nombre, args.email, args.vence, args.cuentas)
+
+    plan = {1: "Básico — u$s 100 (1 cuenta)", 2: "Pro — u$s 120 (2 cuentas)", 5: "Premium (5 cuentas)"}.get(
+        args.cuentas, f"{args.cuentas} cuentas")
 
     print(f"""
 {'='*60}
-  LICENCIA GENERADA — SISFE Monitor
+  LICENCIA GENERADA — SISFE Monitor · BE LEGAL
 {'='*60}
   Cliente  : {args.nombre}
   Email    : {args.email}
+  Plan     : {plan}
   Vence    : {args.vence or 'Perpetua'}
   Emitida  : {date.today().strftime('%d/%m/%Y')}
 

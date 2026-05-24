@@ -8,16 +8,20 @@ from core.state_manager import es_sentencia
 
 logger = logging.getLogger(__name__)
 
-# ── Paleta corporativa ─────────────────────────────────────────────────────
-_AZUL        = "#0f1d59"
-_AZUL_CLARO  = "#e8eaf2"
-_GRIS        = "#f5f5f6"
-_BORDE       = "#bcbec0"
-_TEXTO       = "#0f1d59"
-_MUTED       = "#6b6d70"
-_FONT        = "'Source Sans Pro', Arial, Helvetica, sans-serif"
+# ── Paleta BE LEGAL ───────────────────────────────────────────────────────
+_NARANJA     = "#F03010"   # color principal BE LEGAL
+_NARANJA_OSC = "#C02000"
+_GRIS        = "#F5F5F5"
+_BORDE       = "#DDDDDD"
+_TEXTO       = "#111111"
+_MUTED       = "#777777"
+_FONT        = "Arial, Helvetica, sans-serif"
 _AMARILLO    = "#FFE500"   # fluorescente para sentencias
 _AMARILLO_T  = "#7A6B00"  # texto sobre amarillo
+
+# Alias internos
+_AZUL        = _NARANJA
+_AZUL_CLARO  = "#FFE8E4"
 
 
 class EmailNotifier:
@@ -244,10 +248,10 @@ class EmailNotifier:
 
     def _wrap(self, cuerpo, ahora, tipo="novedades"):
         color_header = {
-            "resumen_semana": "#4a148c",
+            "resumen_semana": "#7B1FA2",
             "resumen_dia":    "#1b5e20",
-            "novedades":      _AZUL,
-        }.get(tipo, _AZUL)
+            "novedades":      _NARANJA,
+        }.get(tipo, _NARANJA)
 
         subtitulo_header = {
             "resumen_semana": "Resumen Semanal",
@@ -260,33 +264,46 @@ class EmailNotifier:
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap"
-        rel="stylesheet">
 </head>
-<body style="margin:0;padding:0;background:#e9eaed;font-family:{_FONT};color:{_TEXTO};">
+<body style="margin:0;padding:0;background:#EBEBEB;font-family:{_FONT};color:{_TEXTO};">
 <div style="max-width:680px;margin:28px auto;background:#ffffff;
-            border-radius:8px;box-shadow:0 2px 10px rgba(15,29,89,0.12);overflow:hidden;">
+            border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.15);overflow:hidden;">
 
-  <!-- Header -->
-  <div style="background:{color_header};padding:20px 28px;">
-    <h1 style="margin:0;color:#ffffff;font-size:20px;font-weight:700;
-               letter-spacing:0.3px;font-family:{_FONT};">
-      SISFE &mdash; {subtitulo_header}
-    </h1>
-    <p style="margin:5px 0 0;color:{_BORDE};font-size:12px;">{ahora}</p>
+  <!-- Header BE LEGAL -->
+  <div style="background:{color_header};padding:18px 28px;">
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td>
+          <span style="color:#ffffff;font-size:22px;font-weight:900;
+                       letter-spacing:-0.5px;font-family:Arial,sans-serif;">BE LEGAL</span>
+          <span style="color:#FFD0C0;font-size:13px;margin-left:8px;">· {subtitulo_header}</span>
+        </td>
+        <td align="right">
+          <span style="color:#FFD0C0;font-size:11px;">{ahora}</span>
+        </td>
+      </tr>
+    </table>
   </div>
 
   <!-- Cuerpo -->
-  <div style="padding:22px 28px;">
+  <div style="padding:24px 28px;">
 {cuerpo}
   </div>
 
   <!-- Footer -->
-  <div style="background:{_GRIS};border-top:1px solid {_BORDE};
-              padding:10px 28px;text-align:center;">
-    <p style="margin:0;font-size:11px;color:{_BORDE};">
-      Mensaje automatico &middot; Agente SISFE &middot; {ahora}
-    </p>
+  <div style="background:{_GRIS};border-top:1px solid {_BORDE};padding:12px 28px;">
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td style="font-size:11px;color:#999;">
+          Mensaje automático · <strong style="color:{_NARANJA};">BE LEGAL</strong> · SISFE Monitor
+        </td>
+        <td align="right" style="font-size:11px;color:#999;">
+          <a href="mailto:ediaz@belegal.ar" style="color:{_NARANJA};text-decoration:none;">
+            ediaz@belegal.ar
+          </a>
+        </td>
+      </tr>
+    </table>
   </div>
 
 </div>

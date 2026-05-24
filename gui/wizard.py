@@ -5,6 +5,8 @@ Se muestra la primera vez (o desde Configuracion en el tray).
 import tkinter as tk
 from tkinter import ttk, messagebox
 import sys
+import os
+import platform
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -12,13 +14,44 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from license.validator import validate_license, get_license_info
 import core.config_manager as cfg_mgr
 
-# ── Colores corporativos ───────────────────────────────────────────────────────
-AZUL   = "#0f1d59"
-GRIS   = "#f5f5f6"
-BORDE  = "#bcbec0"
-BLANCO = "#ffffff"
-ROJO   = "#c62828"
-VERDE  = "#2e7d32"
+# ── Carga de fuente Roboto Flex (solo Windows) ────────────────────────────────
+
+def _cargar_roboto_flex() -> str:
+    """
+    Registra la fuente Roboto Flex en Windows usando GDI.
+    Retorna el nombre de fuente a usar en Tkinter.
+    Fallback a Arial si falla o no es Windows.
+    """
+    if platform.system() != "Windows":
+        return "Arial"
+    try:
+        import ctypes
+        # Buscar el TTF relativo al .exe o al script
+        _base = Path(getattr(sys, "_MEIPASS", Path(__file__).parent.parent))
+        ttf = _base / "assets" / "RobotoFlex.ttf"
+        if ttf.exists():
+            ctypes.windll.gdi32.AddFontResourceExW(str(ttf), 0x10, None)
+            return "Roboto Flex"
+    except Exception:
+        pass
+    return "Arial"
+
+_FUENTE = _cargar_roboto_flex()
+
+# ── Colores BE LEGAL ──────────────────────────────────────────────────────────
+NARANJA = "#F03010"   # color principal BE LEGAL
+NARANJA_OSC = "#C02000"
+NEGRO   = "#111111"
+GRIS    = "#F5F5F5"
+GRIS_MED= "#E0E0E0"
+BORDE   = "#CCCCCC"
+BLANCO  = "#FFFFFF"
+ROJO    = "#c62828"
+VERDE   = "#2e7d32"
+TEXTO   = "#111111"
+
+# Alias para no romper referencias internas
+AZUL    = NARANJA
 
 
 class WizardApp(tk.Tk):
@@ -27,13 +60,14 @@ class WizardApp(tk.Tk):
         self.on_finish = on_finish
         self.config_data = cfg_mgr.load()
 
-        self.title("SISFE Monitor — Configuracion")
+        self.title("BE LEGAL — Configuracion SISFE Monitor")
         self.resizable(False, False)
         self.configure(bg=BLANCO)
 
         # Centrar ventana
+        w, h = 580, 580
+        self.geometry(f"{w}x{h}")
         self.update_idletasks()
-        w, h = 560, 540
         x = (self.winfo_screenwidth()  - w) // 2
         y = (self.winfo_screenheight() - h) // 2
         self.geometry(f"{w}x{h}+{x}+{y}")
@@ -61,14 +95,21 @@ class WizardApp(tk.Tk):
     # ── Layout base ───────────────────────────────────────────────────────────
 
     def _build_header(self):
-        hdr = tk.Frame(self, bg=AZUL, height=64)
+        hdr = tk.Frame(self, bg=NARANJA)
         hdr.pack(fill="x")
-        hdr.pack_propagate(False)
-        tk.Label(hdr, text="SISFE Monitor", bg=AZUL, fg=BLANCO,
-                 font=("Arial", 16, "bold")).pack(side="left", padx=20, pady=16)
-        self.lbl_paso = tk.Label(hdr, text="", bg=AZUL, fg=BORDE,
-                                  font=("Arial", 10))
-        self.lbl_paso.pack(side="right", padx=20)
+
+        inner = tk.Frame(hdr, bg=NARANJA, pady=14)
+        inner.pack(fill="x", padx=20)
+
+        # Logo BE LEGAL
+        tk.Label(inner, text="BE LEGAL", bg=NARANJA, fg=BLANCO,
+                 font=(_FUENTE, 20, "bold")).pack(side="left")
+        tk.Label(inner, text=" · SISFE Monitor", bg=NARANJA, fg="#FFD0C0",
+                 font=(_FUENTE, 13)).pack(side="left", pady=4)
+
+        self.lbl_paso = tk.Label(inner, text="", bg=NARANJA, fg="#FFD0C0",
+                                  font=(_FUENTE, 10))
+        self.lbl_paso.pack(side="right")
 
     def _build_steps(self):
         self.frame_contenido = tk.Frame(self, bg=BLANCO, pady=10)
@@ -79,15 +120,16 @@ class WizardApp(tk.Tk):
         nav.pack(fill="x", side="bottom")
         nav.configure(highlightbackground=BORDE, highlightthickness=1)
 
-        self.btn_atras = tk.Button(nav, text="◀  Atras", command=self._prev,
-                                    bg=GRIS, relief="flat", padx=14, pady=6,
-                                    font=("Arial", 10), cursor="hand2")
+        self.btn_atras = tk.Button(nav, text="◀  Atrás", command=self._prev,
+                                    bg=GRIS, fg=NEGRO, relief="flat", padx=14, pady=6,
+                                    font=(_FUENTE, 10), cursor="hand2",
+                                    activebackground=GRIS_MED)
         self.btn_atras.pack(side="left", padx=16)
 
         self.btn_siguiente = tk.Button(nav, text="Siguiente  ▶", command=self._next,
-                                        bg=AZUL, fg=BLANCO, relief="flat",
-                                        padx=14, pady=6, font=("Arial", 10, "bold"),
-                                        cursor="hand2", activebackground="#1a2f8a",
+                                        bg=NARANJA, fg=BLANCO, relief="flat",
+                                        padx=14, pady=6, font=(_FUENTE, 10, "bold"),
+                                        cursor="hand2", activebackground=NARANJA_OSC,
                                         activeforeground=BLANCO)
         self.btn_siguiente.pack(side="right", padx=16)
 
@@ -102,6 +144,9 @@ class WizardApp(tk.Tk):
         es_ultimo = self.step_index == len(self.steps) - 1
         self.btn_siguiente.config(text="✔  Finalizar" if es_ultimo else "Siguiente  ▶")
         self.btn_atras.config(state="normal" if self.step_index > 0 else "disabled")
+        # Forzar render (fix Mac)
+        self.update_idletasks()
+        self.update()
 
     def _next(self):
         if not self._validate_current():
@@ -137,7 +182,7 @@ class WizardApp(tk.Tk):
         self._subtitulo("Ingresa el codigo que recibiste al adquirir SISFE Monitor.")
 
         tk.Label(self.frame_contenido, text="Codigo de licencia:",
-                 bg=BLANCO, font=("Arial", 10, "bold"), fg=AZUL).pack(anchor="w", pady=(16,4))
+                 bg=BLANCO, font=(_FUENTE, 10, "bold"), fg=AZUL).pack(anchor="w", pady=(16,4))
 
         self.ent_licencia = tk.Entry(self.frame_contenido, font=("Courier", 11),
                                       width=44, relief="solid", bd=1)
@@ -145,15 +190,15 @@ class WizardApp(tk.Tk):
         self.ent_licencia.insert(0, self.config_data.get("licencia", ""))
 
         self.lbl_lic_status = tk.Label(self.frame_contenido, text="",
-                                        bg=BLANCO, font=("Arial", 9))
+                                        bg=BLANCO, font=(_FUENTE, 9))
         self.lbl_lic_status.pack(anchor="w", pady=(4,0))
 
         tk.Button(self.frame_contenido, text="Validar", command=self._validar_licencia,
                   bg=AZUL, fg=BLANCO, relief="flat", padx=12, pady=4,
-                  font=("Arial", 9, "bold"), cursor="hand2").pack(anchor="w", pady=(8,0))
+                  font=(_FUENTE, 9, "bold"), cursor="hand2").pack(anchor="w", pady=(8,0))
 
         self._separador()
-        self._nota("¿No tenés tu codigo? Contactá a tu proveedor.")
+        self._nota("¿No tenés tu código? Escribinos a ediaz@belegal.ar")
 
     def _validar_licencia(self):
         code = self.ent_licencia.get().strip()
@@ -189,10 +234,10 @@ class WizardApp(tk.Tk):
         tk.Button(self.frame_contenido, text="🌐  Abrir 2captcha.com",
                   command=lambda: self._abrir_url("https://2captcha.com"),
                   bg="#e65100", fg=BLANCO, relief="flat", padx=12, pady=5,
-                  font=("Arial", 9, "bold"), cursor="hand2").pack(anchor="w", pady=(0, 12))
+                  font=(_FUENTE, 9, "bold"), cursor="hand2").pack(anchor="w", pady=(0, 12))
 
         tk.Label(self.frame_contenido, text="API Key de 2captcha:",
-                 bg=BLANCO, font=("Arial", 10, "bold"), fg=AZUL).pack(anchor="w", pady=(4, 4))
+                 bg=BLANCO, font=(_FUENTE, 10, "bold"), fg=AZUL).pack(anchor="w", pady=(4, 4))
 
         self.ent_captcha = tk.Entry(self.frame_contenido, font=("Courier", 10),
                                      width=44, relief="solid", bd=1)
@@ -212,7 +257,7 @@ class WizardApp(tk.Tk):
         frame_lista = tk.Frame(self.frame_contenido, bg=BLANCO)
         frame_lista.pack(fill="x", pady=(12,0))
 
-        self.lista_cuentas = tk.Listbox(frame_lista, height=5, font=("Arial", 10),
+        self.lista_cuentas = tk.Listbox(frame_lista, height=5, font=(_FUENTE, 10),
                                           selectmode="single", relief="solid", bd=1,
                                           activestyle="none")
         self.lista_cuentas.pack(side="left", fill="x", expand=True)
@@ -223,12 +268,24 @@ class WizardApp(tk.Tk):
         frame_btns.pack(side="left", padx=(8,0))
         tk.Button(frame_btns, text="➕ Agregar", command=self._agregar_cuenta,
                   bg=AZUL, fg=BLANCO, relief="flat", width=12, pady=4,
-                  font=("Arial", 9, "bold"), cursor="hand2").pack(pady=(0,6))
+                  font=(_FUENTE, 9, "bold"), cursor="hand2").pack(pady=(0,6))
         tk.Button(frame_btns, text="🗑 Eliminar", command=self._eliminar_cuenta,
                   bg=GRIS, fg=ROJO, relief="flat", width=12, pady=4,
-                  font=("Arial", 9), cursor="hand2").pack()
+                  font=(_FUENTE, 9), cursor="hand2").pack()
 
     def _agregar_cuenta(self):
+        # Verificar límite de la licencia
+        from license.validator import get_license_info
+        info = get_license_info(self.config_data.get("licencia", ""))
+        max_c = info.get("max_cuentas", 2) if info else 2
+        if len(self.config_data.get("cuentas", [])) >= max_c:
+            messagebox.showwarning(
+                "Límite de cuentas",
+                f"Tu licencia permite hasta {max_c} cuenta(s).\n\n"
+                f"Para agregar más, contactá a ediaz@belegal.ar"
+            )
+            return
+
         dlg = tk.Toplevel(self)
         dlg.title("Agregar cuenta SISFE")
         dlg.resizable(False, False)
@@ -254,10 +311,10 @@ class WizardApp(tk.Tk):
         frame.pack(fill="both", expand=True)
 
         for key, (label, placeholder) in opciones.items():
-            tk.Label(frame, text=label + ":", bg=BLANCO, font=("Arial", 9, "bold"),
+            tk.Label(frame, text=label + ":", bg=BLANCO, font=(_FUENTE, 9, "bold"),
                      fg=AZUL).pack(anchor="w", pady=(8,2))
             show = "*" if key == "clave" else ""
-            ent = tk.Entry(frame, font=("Arial", 10), relief="solid", bd=1, show=show)
+            ent = tk.Entry(frame, font=(_FUENTE, 10), relief="solid", bd=1, show=show)
             ent.pack(fill="x", ipady=4)
             if placeholder:
                 ent.insert(0, placeholder)
@@ -290,7 +347,7 @@ class WizardApp(tk.Tk):
 
         tk.Button(dlg, text="Guardar cuenta", command=guardar,
                   bg=AZUL, fg=BLANCO, relief="flat", pady=8,
-                  font=("Arial", 10, "bold"), cursor="hand2").pack(
+                  font=(_FUENTE, 10, "bold"), cursor="hand2").pack(
                   fill="x", padx=20, pady=(0,16))
 
     def _eliminar_cuenta(self):
@@ -311,8 +368,8 @@ class WizardApp(tk.Tk):
 
         # ── Remitente ──
         tk.Label(self.frame_contenido, text="Tu Gmail (desde donde se envía):",
-                 bg=BLANCO, font=("Arial", 10, "bold"), fg=AZUL).pack(anchor="w", pady=(10,3))
-        ent_rem = tk.Entry(self.frame_contenido, font=("Arial", 10),
+                 bg=BLANCO, font=(_FUENTE, 10, "bold"), fg=AZUL).pack(anchor="w", pady=(10,3))
+        ent_rem = tk.Entry(self.frame_contenido, font=(_FUENTE, 10),
                            width=44, relief="solid", bd=1)
         ent_rem.pack(anchor="w", ipady=5)
         ent_rem.insert(0, email_cfg.get("remitente", ""))
@@ -320,8 +377,8 @@ class WizardApp(tk.Tk):
 
         # ── Destinatarios ──
         tk.Label(self.frame_contenido, text="Destinatarios (separados por coma):",
-                 bg=BLANCO, font=("Arial", 10, "bold"), fg=AZUL).pack(anchor="w", pady=(10,3))
-        ent_dest = tk.Entry(self.frame_contenido, font=("Arial", 10),
+                 bg=BLANCO, font=(_FUENTE, 10, "bold"), fg=AZUL).pack(anchor="w", pady=(10,3))
+        ent_dest = tk.Entry(self.frame_contenido, font=(_FUENTE, 10),
                             width=44, relief="solid", bd=1)
         ent_dest.pack(anchor="w", ipady=5)
         ent_dest.insert(0, email_cfg.get("destinatario", ""))
@@ -333,14 +390,14 @@ class WizardApp(tk.Tk):
         frame_pwd_titulo = tk.Frame(self.frame_contenido, bg=BLANCO)
         frame_pwd_titulo.pack(fill="x", pady=(10, 4))
         tk.Label(frame_pwd_titulo, text="Contraseña de aplicación de Gmail:",
-                 bg=BLANCO, font=("Arial", 10, "bold"), fg=AZUL).pack(side="left")
+                 bg=BLANCO, font=(_FUENTE, 10, "bold"), fg=AZUL).pack(side="left")
 
         # Toggle instructivo
         self.var_mostrar_ayuda = tk.BooleanVar(value=not bool(email_cfg.get("app_password")))
         tk.Checkbutton(frame_pwd_titulo, text="¿Cómo la obtengo?",
                        variable=self.var_mostrar_ayuda,
                        command=self._toggle_ayuda_gmail,
-                       bg=BLANCO, fg="#e65100", font=("Arial", 9, "bold"),
+                       bg=BLANCO, fg="#e65100", font=(_FUENTE, 9, "bold"),
                        activebackground=BLANCO, cursor="hand2",
                        selectcolor=BLANCO).pack(side="right")
 
@@ -368,7 +425,7 @@ class WizardApp(tk.Tk):
                   command=lambda: self._abrir_url(
                       "https://myaccount.google.com/apppasswords"),
                   bg="#e65100", fg=BLANCO, relief="flat", padx=10, pady=5,
-                  font=("Arial", 9, "bold"), cursor="hand2").pack(side="left")
+                  font=(_FUENTE, 9, "bold"), cursor="hand2").pack(side="left")
 
         if self.var_mostrar_ayuda.get():
             self.frame_ayuda_gmail.pack(fill="x", pady=(0, 8))
@@ -423,7 +480,7 @@ class WizardApp(tk.Tk):
             self.frame_contenido, text="＋  Agregar horario",
             command=lambda: self._agregar_fila_horario(""),
             bg=GRIS, fg=AZUL, relief="flat", padx=10, pady=4,
-            font=("Arial", 9, "bold"), cursor="hand2"
+            font=(_FUENTE, 9, "bold"), cursor="hand2"
         )
         self.btn_add_hora.pack(anchor="w", pady=(8, 0))
 
@@ -432,7 +489,7 @@ class WizardApp(tk.Tk):
         # Resumen semanal dominical
         res_sem = self.config_data.get("resumen_semanal", {"activo": True, "hora": "20:00"})
         tk.Label(self.frame_contenido, text="Resumen semanal (domingos):",
-                 bg=BLANCO, font=("Arial", 10, "bold"), fg=AZUL).pack(anchor="w", pady=(14, 4))
+                 bg=BLANCO, font=(_FUENTE, 10, "bold"), fg=AZUL).pack(anchor="w", pady=(14, 4))
 
         frame_dom = tk.Frame(self.frame_contenido, bg=BLANCO)
         frame_dom.pack(anchor="w")
@@ -440,12 +497,12 @@ class WizardApp(tk.Tk):
         self.var_resumen_sem = tk.BooleanVar(value=res_sem.get("activo", True))
         tk.Checkbutton(frame_dom, text="Activar resumen dominical",
                        variable=self.var_resumen_sem,
-                       bg=BLANCO, font=("Arial", 9), fg="#333333",
+                       bg=BLANCO, font=(_FUENTE, 9), fg="#333333",
                        activebackground=BLANCO, cursor="hand2").pack(side="left")
 
         tk.Label(frame_dom, text="  Hora:", bg=BLANCO,
-                 font=("Arial", 9), fg="#333333").pack(side="left")
-        self.ent_hora_dom = tk.Entry(frame_dom, width=7, font=("Arial", 10),
+                 font=(_FUENTE, 9), fg="#333333").pack(side="left")
+        self.ent_hora_dom = tk.Entry(frame_dom, width=7, font=(_FUENTE, 10),
                                       relief="solid", bd=1)
         self.ent_hora_dom.pack(side="left", ipady=3, padx=(4, 0))
         self.ent_hora_dom.insert(0, res_sem.get("hora", "20:00"))
@@ -464,7 +521,7 @@ class WizardApp(tk.Tk):
         tipo_txt = "🌅 Mañana" if idx == 0 else "☀️ Tarde" if idx == 1 else f"⏰ Horario {idx+1}"
 
         tk.Label(fila, text=f"  {tipo_txt}:", bg=BLANCO,
-                 font=("Arial", 9), fg="#444", width=14, anchor="w").pack(side="left")
+                 font=(_FUENTE, 9), fg="#444", width=14, anchor="w").pack(side="left")
 
         var = tk.StringVar(value=hora_inicial)
         ent = tk.Entry(fila, textvariable=var, width=8, font=("Courier", 11),
@@ -477,7 +534,7 @@ class WizardApp(tk.Tk):
             self._actualizar_btn_add()
 
         tk.Button(fila, text="✕", command=eliminar,
-                  bg=GRIS, fg=ROJO, relief="flat", font=("Arial", 9),
+                  bg=GRIS, fg=ROJO, relief="flat", font=(_FUENTE, 9),
                   cursor="hand2", padx=4).pack(side="left", padx=(6, 0))
 
         self._horarios_vars.append(var)
@@ -640,7 +697,7 @@ class WizardApp(tk.Tk):
 
             # Círculo con número
             circulo = tk.Label(fila, text=num, bg=AZUL, fg=BLANCO,
-                               font=("Arial", 9, "bold"),
+                               font=(_FUENTE, 9, "bold"),
                                width=2, height=1, relief="flat")
             circulo.pack(side="left", padx=(0, 8), pady=2, anchor="n")
 
@@ -648,10 +705,10 @@ class WizardApp(tk.Tk):
             bloque = tk.Frame(fila, bg=bg)
             bloque.pack(side="left", fill="x", expand=True)
             tk.Label(bloque, text=titulo, bg=bg, fg=AZUL,
-                     font=("Arial", 9, "bold"),
+                     font=(_FUENTE, 9, "bold"),
                      anchor="w", justify="left").pack(anchor="w")
             tk.Label(bloque, text=desc, bg=bg, fg="#444444",
-                     font=("Arial", 8), anchor="w", justify="left",
+                     font=(_FUENTE, 8), anchor="w", justify="left",
                      wraplength=420).pack(anchor="w")
 
     def _abrir_url(self, url: str):
@@ -660,29 +717,29 @@ class WizardApp(tk.Tk):
         webbrowser.open(url)
 
     def _titulo(self, texto):
-        tk.Label(self.frame_contenido, text=texto, bg=BLANCO, fg=AZUL,
-                 font=("Arial", 14, "bold")).pack(anchor="w", pady=(10,4))
+        tk.Label(self.frame_contenido, text=texto, bg=BLANCO, fg=NARANJA,
+                 font=(_FUENTE, 14, "bold")).pack(anchor="w", pady=(12, 4))
 
     def _subtitulo(self, texto):
-        tk.Label(self.frame_contenido, text=texto, bg=BLANCO, fg="#444444",
-                 font=("Arial", 9), justify="left", wraplength=500).pack(anchor="w")
+        tk.Label(self.frame_contenido, text=texto, bg=BLANCO, fg="#555555",
+                 font=(_FUENTE, 9), justify="left", wraplength=520).pack(anchor="w")
 
     def _separador(self):
-        tk.Frame(self.frame_contenido, bg=BORDE, height=1).pack(
-            fill="x", pady=(20,0))
+        tk.Frame(self.frame_contenido, bg=GRIS_MED, height=1).pack(
+            fill="x", pady=(16, 0))
 
     def _nota(self, texto):
-        tk.Label(self.frame_contenido, text=texto, bg=BLANCO, fg=BORDE,
-                 font=("Arial", 8), justify="left", wraplength=500).pack(
-                 anchor="w", pady=(6,0))
+        tk.Label(self.frame_contenido, text=texto, bg=BLANCO, fg="#999999",
+                 font=(_FUENTE, 8), justify="left", wraplength=520).pack(
+                 anchor="w", pady=(6, 0))
 
     def _row(self, parent, label, value):
         f = tk.Frame(parent, bg=GRIS)
         f.pack(fill="x", pady=3)
-        tk.Label(f, text=label + ":", bg=GRIS, fg=AZUL,
-                 font=("Arial", 9, "bold"), width=16, anchor="w").pack(side="left")
-        tk.Label(f, text=value, bg=GRIS, fg="#333333",
-                 font=("Arial", 9), anchor="w", wraplength=340).pack(side="left")
+        tk.Label(f, text=label + ":", bg=GRIS, fg=NARANJA,
+                 font=(_FUENTE, 9, "bold"), width=16, anchor="w").pack(side="left")
+        tk.Label(f, text=value, bg=GRIS, fg=NEGRO,
+                 font=(_FUENTE, 9), anchor="w", wraplength=340).pack(side="left")
 
 
 def run_wizard(on_finish=None):

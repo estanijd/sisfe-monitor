@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SISFE Monitor — Guía de Instalación</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@300;400;500;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Roboto Flex', Arial, sans-serif;
+    background: #f7f7f7;
+    color: #111;
+    line-height: 1.6;
+  }
+
+  /* ── Portada ── */
+  .cover {
+    background: #F03010;
+    color: #fff;
+    padding: 60px 48px 48px;
+    page-break-after: always;
+  }
+  .cover .brand { font-size: 13px; font-weight: 500; letter-spacing: 3px; opacity: 0.75; margin-bottom: 32px; }
+  .cover h1 { font-size: 42px; font-weight: 700; line-height: 1.15; margin-bottom: 12px; }
+  .cover .sub { font-size: 19px; font-weight: 300; opacity: 0.85; margin-bottom: 40px; }
+  .cover .version-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 20px;
+    padding: 4px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    margin-bottom: 56px;
+  }
+  .cover .contact {
+    font-size: 13px;
+    opacity: 0.7;
+    margin-top: 8px;
+  }
+  .cover .contact a { color: #fff; text-decoration: none; }
+
+  /* ── Contenido ── */
+  .page { max-width: 800px; margin: 0 auto; padding: 48px 40px; }
+
+  h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #F03010;
+    margin-top: 40px;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #F03010;
+  }
+  h3 { font-size: 15px; font-weight: 700; margin-top: 24px; margin-bottom: 8px; color: #222; }
+  p { margin-bottom: 12px; font-size: 14.5px; }
+
+  /* ── Pasos numerados ── */
+  .steps { counter-reset: step; margin: 20px 0; }
+  .step {
+    counter-increment: step;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding: 20px 22px;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #e8e8e8;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .step::before {
+    content: counter(step);
+    flex-shrink: 0;
+    width: 36px; height: 36px;
+    background: #F03010;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+  }
+  .step-body { flex: 1; }
+  .step-body strong { font-size: 15px; display: block; margin-bottom: 6px; }
+  .step-body p { font-size: 13.5px; margin-bottom: 6px; color: #444; }
+
+  /* ── Wizard steps ── */
+  .wizard-steps { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
+  .wstep {
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #e8e8e8;
+    padding: 16px 18px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  .wstep .num {
+    display: inline-block;
+    background: #F03010;
+    color: #fff;
+    border-radius: 4px;
+    padding: 1px 8px;
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+  .wstep strong { display: block; font-size: 14px; margin-bottom: 4px; }
+  .wstep p { font-size: 12.5px; color: #555; margin: 0; }
+
+  /* ── Info boxes ── */
+  .box {
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-size: 13.5px;
+  }
+  .box-info    { background: #fff8f0; border-left: 4px solid #F03010; }
+  .box-tip     { background: #f0f8f0; border-left: 4px solid #2e7d32; }
+  .box-warning { background: #fffde7; border-left: 4px solid #f9a825; }
+  .box strong  { display: block; margin-bottom: 4px; }
+
+  /* ── FAQ ── */
+  .faq-item { margin-bottom: 20px; background: #fff; border-radius: 8px; border: 1px solid #e8e8e8; padding: 18px 20px; }
+  .faq-item .q { font-weight: 700; color: #F03010; margin-bottom: 6px; font-size: 14px; }
+  .faq-item .a { font-size: 13.5px; color: #444; }
+
+  /* ── Email preview ── */
+  .email-preview {
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    overflow: hidden;
+    margin: 20px 0;
+    font-size: 13px;
+  }
+  .email-header { background: #F03010; color: #fff; padding: 14px 20px; font-weight: 700; }
+  .email-body { padding: 16px 20px; }
+  .email-movimiento { background: #f9f9f9; border-radius: 6px; padding: 10px 14px; margin-bottom: 8px; border-left: 3px solid #ccc; }
+  .email-movimiento.sentencia { background: #fffde0; border-left-color: #FFE500; }
+  .email-movimiento .exp { font-size: 11px; color: #888; margin-bottom: 3px; }
+  .email-movimiento .mov { font-size: 13px; }
+  .badge { display: inline-block; background: #FFE500; color: #333; border-radius: 3px; padding: 1px 6px; font-size: 10px; font-weight: 700; }
+
+  /* ── Planes ── */
+  .planes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  .plan {
+    background: #fff;
+    border-radius: 10px;
+    border: 2px solid #e8e8e8;
+    padding: 22px 20px;
+    text-align: center;
+  }
+  .plan.pro { border-color: #F03010; }
+  .plan .nombre { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .plan .precio { font-size: 28px; font-weight: 700; color: #F03010; margin: 8px 0; }
+  .plan .precio span { font-size: 14px; font-weight: 400; color: #888; }
+  .plan ul { list-style: none; font-size: 13.5px; text-align: left; margin-top: 12px; }
+  .plan ul li { padding: 3px 0; }
+  .plan ul li::before { content: "✓  "; color: #F03010; font-weight: 700; }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    padding: 32px;
+    font-size: 12px;
+    color: #888;
+    border-top: 1px solid #e8e8e8;
+    margin-top: 48px;
+  }
+  footer strong { color: #F03010; }
+
+  /* Print */
+  @media print {
+    body { background: #fff; }
+    .cover { page-break-after: always; }
+    .no-print { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════ PORTADA ══════════════════════ -->
+<div class="cover">
+  <p class="brand">BE LEGAL · SOFTWARE JURÍDICO</p>
+  <h1>SISFE Monitor</h1>
+  <p class="sub">Guía de instalación y configuración</p>
+  <div class="version-badge">versión 1.0.0</div>
+  <p style="margin-top: 40px; font-size:14px; opacity:0.85">
+    Monitoreo automático de expedientes judiciales en SISFE.<br>
+    Recibí notificaciones por email sin hacer nada.
+  </p>
+  <p class="contact" style="margin-top:32px">
+    Soporte: <a href="mailto:ediaz@belegal.ar">ediaz@belegal.ar</a>
+  </p>
+</div>
+
+<!-- ══════════════════════ CONTENIDO ══════════════════════ -->
+<div class="page">
+
+  <!-- ── ¿Qué es SISFE Monitor? ── -->
+  <h2>¿Qué hace SISFE Monitor?</h2>
+  <p>
+    SISFE Monitor es un agente automático que ingresa al sistema SISFE en tu nombre,
+    revisa el estado de todos tus expedientes y te envía un email con los movimientos nuevos.
+    Lo hace en los horarios que vos configurás, sin que tengas que hacer nada.
+  </p>
+
+  <div class="email-preview">
+    <div class="email-header">📋 [SISFE] Movimientos — 24/05/2026 · 14:00</div>
+    <div class="email-body">
+      <div class="email-movimiento">
+        <div class="exp">Exp. 1234/2025 — Juzgado Civil N°3</div>
+        <div class="mov">Notificación al demandado — 24/05/2026</div>
+      </div>
+      <div class="email-movimiento sentencia">
+        <div class="exp">Exp. 5678/2024 — Juzgado Laboral N°1 &nbsp;<span class="badge">⚖️ SENTENCIA</span></div>
+        <div class="mov">Sentencia definitiva — Hace lugar a la demanda</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="box box-tip">
+    <strong>✅ Funciona con tu cuenta SISFE existente</strong>
+    No necesitás crear cuentas nuevas. Usás el mismo usuario y contraseña con el que entrás normalmente a SISFE.
+  </div>
+
+  <!-- ── Requisitos ── -->
+  <h2>Requisitos</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-body">
+        <strong>Windows 10 o superior (64-bit)</strong>
+        <p>El programa corre únicamente en Windows. Si tenés Windows 7 u 8, contactanos.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-body">
+        <strong>Código de licencia SISFE Monitor</strong>
+        <p>Recibís el código al contratar el servicio. Si no lo encontrás, escribinos a ediaz@belegal.ar.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-body">
+        <strong>Clave de 2captcha ($3 USD/mes estimado)</strong>
+        <p>SISFE usa un captcha para el login. El programa lo resuelve automáticamente usando 2captcha, un servicio de bajo costo que cada usuario contrata por separado.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-body">
+        <strong>Contraseña de aplicación de Gmail</strong>
+        <p>Para enviar los emails desde tu cuenta de Gmail. El proceso de obtenerla está explicado dentro del programa, paso a paso.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Instalación ── -->
+  <h2>Instalación (5 minutos)</h2>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-body">
+        <strong>Descargá el instalador</strong>
+        <p>El archivo se llama <code>SISFE_Monitor_Setup_v1.0.0.exe</code>.</p>
+        <p>Lo recibís por email al contratar el servicio, o podés descargarlo desde el link que te enviamos.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-body">
+        <strong>Ejecutá el instalador como Administrador</strong>
+        <p>Hacé <em>clic derecho</em> sobre el archivo → <em>"Ejecutar como administrador"</em>.</p>
+        <p>Si Windows pregunta <em>"¿Deseas permitir que esta aplicación haga cambios?"</em>, hacé clic en <strong>Sí</strong>.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-body">
+        <strong>Seguí el asistente de instalación</strong>
+        <p>Hacé clic en <strong>Siguiente</strong> en cada pantalla. Podés dejar todas las opciones por defecto.</p>
+        <p>Al terminar, el programa descargará automáticamente el navegador interno (puede tardar 1-2 minutos con buena conexión).</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-body">
+        <strong>Se abre el asistente de configuración</strong>
+        <p>Al finalizar la instalación, se abre automáticamente la ventana de configuración inicial. Seguí los 6 pasos del asistente (se explican en la página siguiente).</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="box box-warning">
+    <strong>⚠️ No cierres el asistente a mitad de camino</strong>
+    Si necesitás pausar la configuración, podés volver a abrirla desde el ícono de SISFE Monitor en la barra de tareas (esquina inferior derecha) → <em>Configurar</em>.
+  </div>
+
+  <!-- ── Configuración ── -->
+  <h2>Configuración inicial (6 pasos)</h2>
+  <p>El asistente te guía por 6 pasos sencillos. Solo debés completarlos una vez:</p>
+
+  <div class="wizard-steps">
+    <div class="wstep">
+      <div class="num">PASO 1</div>
+      <strong>🔑 Licencia</strong>
+      <p>Ingresá el código de licencia que te enviamos. El programa lo valida automáticamente.</p>
+    </div>
+    <div class="wstep">
+      <div class="num">PASO 2</div>
+      <strong>🤖 2captcha</strong>
+      <p>Ingresá tu API Key de 2captcha. El asistente incluye instrucciones para obtenerla paso a paso (son 2 minutos).</p>
+    </div>
+    <div class="wstep">
+      <div class="num">PASO 3</div>
+      <strong>👤 Cuentas SISFE</strong>
+      <p>Agregá las cuentas que querés monitorear (nombre, matrícula, usuario y contraseña SISFE). Tu plan define cuántas podés agregar.</p>
+    </div>
+    <div class="wstep">
+      <div class="num">PASO 4</div>
+      <strong>📧 Email</strong>
+      <p>Configurá desde qué Gmail se envían los correos y a qué dirección(es) querés recibirlos. Incluye instructivo para la contraseña de app.</p>
+    </div>
+    <div class="wstep">
+      <div class="num">PASO 5</div>
+      <strong>🕐 Horarios</strong>
+      <p>Elegí hasta 5 horarios diarios para las verificaciones. Por defecto: 9:00, 14:00 y 20:00. También podés activar el resumen dominical.</p>
+    </div>
+    <div class="wstep">
+      <div class="num">PASO 6</div>
+      <strong>✅ Finalizar</strong>
+      <p>Revisá el resumen y confirmá. El programa configura automáticamente las tareas en tu PC para que todo corra solo.</p>
+    </div>
+  </div>
+
+  <!-- ── Uso diario ── -->
+  <h2>Uso diario</h2>
+  <p>
+    Una vez configurado, <strong>no necesitás hacer nada</strong>. SISFE Monitor corre automáticamente en segundo plano y te manda emails según el horario que configuraste.
+  </p>
+
+  <h3>Tipos de emails que vas a recibir:</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-body">
+        <strong>📋 Novedades parciales</strong>
+        <p>En cada horario del día, recibís solo los movimientos nuevos desde el último chequeo. Sin repetidos.</p>
+        <p><em>Asunto: [SISFE] Movimientos — 24/05/2026 · 14:00</em></p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-body">
+        <strong>📊 Resumen del día</strong>
+        <p>En el último horario del día, recibís un resumen con todos los movimientos del día completo.</p>
+        <p><em>Asunto: [SISFE · RESUMEN DÍA] 24/05/2026</em></p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-body">
+        <strong>📅 Resumen semanal (domingos)</strong>
+        <p>Opcionalmente, los domingos a la noche recibís un resumen de toda la semana.</p>
+        <p><em>Asunto: [SISFE · RESUMEN SEMANA] Sem. 21/05–27/05/2026</em></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="box box-info">
+    <strong>⚖️ Detección de sentencias</strong>
+    Cuando un movimiento contiene palabras como SENTENCIA, FALLO o RESOLUCIÓN DEFINITIVA, el email lo resalta en amarillo con el badge "⚖️ SENTENCIA" para que lo veas de inmediato.
+  </div>
+
+  <!-- ── Ícono en el sistema ── -->
+  <h2>El ícono en la barra de tareas</h2>
+  <p>
+    SISFE Monitor corre en segundo plano como un ícono en la esquina inferior derecha (junto al reloj).
+    Haciendo clic derecho sobre el ícono podés:
+  </p>
+  <ul style="margin: 12px 0 12px 24px; font-size: 14px;">
+    <li style="margin-bottom: 6px;"><strong>Verificar ahora</strong> — Corre el chequeo inmediatamente</li>
+    <li style="margin-bottom: 6px;"><strong>Configurar</strong> — Vuelve a abrir el asistente de configuración</li>
+    <li style="margin-bottom: 6px;"><strong>Ver log</strong> — Abre el archivo de registro para diagnóstico</li>
+    <li><strong>Salir</strong> — Cierra el ícono (las tareas programadas siguen corriendo)</li>
+  </ul>
+
+  <div class="box box-warning">
+    <strong>💡 Las verificaciones siguen corriendo aunque cierres el ícono</strong>
+    El monitoreo se hace a través del Programador de Tareas de Windows, que corre independientemente del ícono. Solo detendrías el monitoreo si lo desinstalás.
+  </div>
+
+  <!-- ── FAQ ── -->
+  <h2>Preguntas frecuentes</h2>
+
+  <div class="faq-item">
+    <div class="q">¿SISFE Monitor ve mis contraseñas?</div>
+    <div class="a">Las contraseñas se guardan <em>solo en tu PC</em>, en una carpeta protegida (<code>%APPDATA%\SISFEMonitor\</code>). Nunca se envían a ningún servidor externo. Nadie más que tu computadora las tiene.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="q">¿Qué pasa si mi PC está apagada cuando debería correr el chequeo?</div>
+    <div class="a">Si la PC está apagada, el chequeo no se ejecuta. El siguiente se corre normalmente. Para asegurar monitoreo continuo, lo ideal es dejar la PC encendida o en suspensión durante el horario laboral.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="q">¿2captcha es obligatorio? ¿Cuánto cuesta?</div>
+    <div class="a">Sí, SISFE usa un captcha de Google para el login que no se puede omitir. 2captcha lo resuelve automáticamente. El costo típico es menos de u$s 3 por mes con uso normal (cada resolución cuesta fracciones de centavo).</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="q">No recibo los emails. ¿Qué hago?</div>
+    <div class="a">Primero revisá la carpeta de <em>Spam</em> o <em>Correo no deseado</em>. Si el problema persiste, abrí SISFE Monitor desde la barra de tareas → <em>Configurar</em> → paso de Email → botón "Enviar email de prueba". Si falla, verificá que la contraseña de aplicación sea correcta.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="q">¿Cómo desinstalo el programa?</div>
+    <div class="a">Desde el Panel de Control de Windows → <em>Programas y características</em> → buscá <em>SISFE Monitor</em> → Desinstalar. Al desinstalar se eliminan automáticamente las tareas programadas. Tu configuración en AppData puede quedar; podés borrarla manualmente si querés.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="q">¿El programa se actualiza solo?</div>
+    <div class="a">Sí. Cuando haya una nueva versión disponible, SISFE Monitor te mostrará una notificación al abrirse. Podés descargar e instalar la actualización con un clic, sin perder tu configuración.</div>
+  </div>
+
+  <!-- ── Planes ── -->
+  <h2>Planes disponibles</h2>
+
+  <div class="planes">
+    <div class="plan">
+      <div class="nombre">Básico</div>
+      <div class="precio">u$s 100 <span>/ única vez</span></div>
+      <ul>
+        <li>1 cuenta SISFE</li>
+        <li>Hasta 5 horarios diarios</li>
+        <li>Resumen diario y semanal</li>
+        <li>Detección de sentencias</li>
+        <li>Actualizaciones incluidas</li>
+      </ul>
+    </div>
+    <div class="plan pro">
+      <div class="nombre">Pro</div>
+      <div class="precio">u$s 120 <span>/ única vez</span></div>
+      <ul>
+        <li>2 cuentas SISFE</li>
+        <li>Hasta 5 horarios diarios</li>
+        <li>Resumen diario y semanal</li>
+        <li>Detección de sentencias</li>
+        <li>Actualizaciones incluidas</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="box box-tip">
+    <strong>✅ Pago único — sin suscripción</strong>
+    Comprás la licencia una sola vez y es tuya para siempre. Las actualizaciones están incluidas.
+  </div>
+
+  <!-- ── Soporte ── -->
+  <h2>Soporte</h2>
+  <p>
+    Para cualquier consulta, problema de instalación o soporte técnico, contactate con nosotros:
+  </p>
+  <div style="background:#fff; border-radius:10px; border:1px solid #e8e8e8; padding:20px 24px; margin:16px 0; font-size:14.5px;">
+    <strong style="color:#F03010; font-size:16px;">BE LEGAL</strong><br>
+    <span style="color:#555;">Software jurídico para estudios de abogados</span><br><br>
+    📧 <a href="mailto:ediaz@belegal.ar" style="color:#F03010; font-weight:700;">ediaz@belegal.ar</a>
+  </div>
+
+</div>
+
+<!-- ══════════════════════ FOOTER ══════════════════════ -->
+<footer>
+  <strong>BE LEGAL</strong> · SISFE Monitor v1.0.0 · ediaz@belegal.ar<br>
+  <span style="font-size:11px; margin-top:4px; display:block;">
+    Este documento es confidencial y de uso exclusivo del cliente.
+  </span>
+</footer>
+
+</body>
+</html>

@@ -14,7 +14,14 @@ from pathlib import Path
 BASE_DIR = Path(__file__).parent
 sys.path.insert(0, str(BASE_DIR))
 
-LOG_FILE = BASE_DIR / "sisfe_monitor.log"
+import os as _os
+_appdata = _os.environ.get("APPDATA", "")
+if _appdata:
+    _log_dir = Path(_appdata) / "SISFEMonitor"
+    _log_dir.mkdir(parents=True, exist_ok=True)
+    LOG_FILE = _log_dir / "sisfe_monitor.log"
+else:
+    LOG_FILE = BASE_DIR / "sisfe_monitor.log"
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s  %(levelname)-8s  %(message)s",

@@ -16,6 +16,7 @@ Estructura de sisfe_state.json:
   }
 }
 """
+import os
 import json
 import hashlib
 import logging
@@ -24,7 +25,14 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-STATE_FILE = Path(__file__).parent.parent / "sisfe_state.json"
+# Guardar en AppData en Windows, junto al proyecto en desarrollo
+_APPDATA = os.environ.get("APPDATA", "")
+if _APPDATA:
+    _DATA_DIR = Path(_APPDATA) / "SISFEMonitor"
+else:
+    _DATA_DIR = Path(__file__).parent.parent
+_DATA_DIR.mkdir(parents=True, exist_ok=True)
+STATE_FILE = _DATA_DIR / "sisfe_state.json"
 
 # Palabras clave que identifican sentencias (detección para amarillo)
 KEYWORDS_SENTENCIA = [
