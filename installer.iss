@@ -27,9 +27,9 @@ WizardStyle=modern
 MinVersion=10.0
 PrivilegesRequired=admin
 PrivilegesRequiredOverridesAllowed=dialog
-; Mostrar bienvenida con logo
-WizardImageFile=assets\wizard_banner.bmp
-WizardSmallImageFile=assets\icon_small.bmp
+; Mostrar bienvenida con logo (descomentar cuando existan los BMP)
+;WizardImageFile=assets\wizard_banner.bmp
+;WizardSmallImageFile=assets\icon_small.bmp
 
 [Languages]
 Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
