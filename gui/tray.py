@@ -55,12 +55,14 @@ class SISFETray:
                 return
 
         menu = pystray.Menu(
-            pystray.MenuItem("▶  Correr ahora",       self._on_correr),
-            pystray.MenuItem("⚙  Configuracion",       self._on_config),
+            pystray.MenuItem("▶  Correr ahora",         self._on_correr),
+            pystray.MenuItem("⚙  Configuracion",         self._on_config),
+            pystray.Menu.SEPARATOR,
+            pystray.MenuItem("📄  Carta Documento",      self._on_carta_doc),
             pystray.Menu.SEPARATOR,
             pystray.MenuItem("🔄  Buscar actualizacion", self._on_update),
             pystray.Menu.SEPARATOR,
-            pystray.MenuItem("✖  Salir",               self._on_salir),
+            pystray.MenuItem("✖  Salir",                 self._on_salir),
         )
 
         self.icon = pystray.Icon(
@@ -115,6 +117,15 @@ class SISFETray:
             else:
                 self.notify("SISFE Monitor", "✅ Ya tenes la ultima version.")
         threading.Thread(target=_check, daemon=True).start()
+
+    def _on_carta_doc(self, icon, item):
+        """Abre el generador de Carta Documento en el navegador predeterminado."""
+        html_path = Path(__file__).parent / "carta_documento.html"
+        try:
+            import webbrowser
+            webbrowser.open(html_path.as_uri())
+        except Exception as exc:
+            logger.error(f"No se pudo abrir Carta Documento: {exc}")
 
     def _on_salir(self, icon, item):
         self.stop()

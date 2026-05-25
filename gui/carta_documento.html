@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Carta Documento — SISFE Monitor · BE LEGAL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+
+/* ═══════════════════════════════════════════════
+   SCREEN — SISFE Monitor / BE LEGAL dark theme
+═══════════════════════════════════════════════ */
+:root {
+  --orange: #F03010;
+  --orange-dark: #C02000;
+  --black: #000;
+  --white: #fff;
+  --bg: #111111;
+  --surface: #1a1a1a;
+  --surface2: #222222;
+  --border: rgba(255,255,255,0.08);
+  --gray: #888;
+  --gray-light: #ccc;
+  --green: #2e7d32;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Roboto Flex', Arial, sans-serif;
+  background: var(--bg);
+  color: var(--white);
+  min-height: 100vh;
+}
+
+/* ── Header ── */
+header {
+  background: var(--orange);
+  padding: 14px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+header .brand {
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.3px;
+  color: #fff;
+}
+header .brand span { opacity: 0.7; font-weight: 300; font-size: 14px; margin-left: 8px; }
+header .badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  background: rgba(0,0,0,0.2);
+  padding: 4px 12px;
+  border-radius: 2px;
+}
+
+/* ── Privacy banner ── */
+.privacy-banner {
+  background: rgba(46,125,50,0.1);
+  border-bottom: 1px solid rgba(46,125,50,0.25);
+  padding: 10px 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+}
+.privacy-banner .icon { font-size: 16px; }
+.privacy-banner strong { color: #4ade80; font-size: 12px; display: block; margin-bottom: 2px; }
+.privacy-banner span { color: rgba(255,255,255,0.45); line-height: 1.5; font-weight: 300; }
+
+/* ── Hero ── */
+.hero {
+  padding: 32px 32px 0;
+  border-bottom: 1px solid var(--border);
+  max-width: 960px;
+  margin: 0 auto;
+}
+.hero .label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hero .label::before { content: ''; width: 24px; height: 1px; background: var(--orange); }
+.hero h1 { font-size: 36px; font-weight: 700; line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 10px; }
+.hero p { font-size: 13px; font-weight: 300; color: var(--gray); padding-bottom: 28px; line-height: 1.6; }
+.hero p strong { color: var(--gray-light); font-weight: 500; }
+
+/* ── Form grid ── */
+.main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 32px 80px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+.full { grid-column: 1 / -1; }
+
+/* ── Cards ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.card-header {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card-num {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--orange);
+}
+.card-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.card-body { padding: 20px; }
+
+/* ── Form groups ── */
+.fg { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+.fg:last-child { margin-bottom: 0; }
+.fg label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+.fg input, .fg textarea, .fg select {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--white);
+  font-family: 'Roboto Flex', Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  padding: 9px 12px;
+  outline: none;
+  transition: border-color 0.2s;
+  width: 100%;
+  border-radius: 2px;
+}
+.fg input:focus, .fg textarea:focus { border-color: var(--orange); }
+.fg textarea { resize: vertical; min-height: 200px; line-height: 1.65; }
+
+.row3 { display: grid; grid-template-columns: 70px 1fr 1fr; gap: 8px; }
+
+.char-counter { font-size: 11px; color: var(--gray); text-align: right; margin-top: 3px; }
+.char-counter.warn { color: #f59e0b; }
+.char-counter.over { color: #ef4444; }
+
+/* ── Prefill button ── */
+.prefill-btn {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--orange);
+  background: transparent;
+  border: 1px solid rgba(240,48,16,0.3);
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Roboto Flex', Arial, sans-serif;
+  margin-bottom: 14px;
+  display: inline-block;
+  border-radius: 2px;
+}
+.prefill-btn:hover { background: rgba(240,48,16,0.08); }
+
+/* ── Action buttons ── */
+.brow { display: flex; gap: 10px; flex-wrap: wrap; grid-column: 1 / -1; margin-top: 4px; }
+.btn {
+  padding: 12px 28px;
+  font-family: 'Roboto Flex', Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 1px solid;
+  transition: all 0.2s;
+  border-radius: 2px;
+}
+.btn-primary { background: var(--orange); color: #fff; border-color: var(--orange); }
+.btn-primary:hover { background: var(--orange-dark); border-color: var(--orange-dark); }
+.btn-outline { background: transparent; color: var(--white); border-color: var(--border); }
+.btn-outline:hover { border-color: var(--orange); color: var(--orange); }
+
+/* ── Footer ── */
+footer {
+  background: #0a0a0a;
+  border-top: 1px solid var(--border);
+  padding: 20px 32px;
+  text-align: center;
+  font-size: 11px;
+  color: rgba(255,255,255,0.2);
+}
+
+
+/* ═══════════════════════════════════════════════
+   PRINT — medidas exactas hoja legal Correo Argentino
+   215.9mm × 355.6mm  |  t:31mm  b:30mm  l:13mm  r:16mm
+═══════════════════════════════════════════════ */
+@media print {
+  header, .privacy-banner, .hero, .main, .no-print, footer { display: none !important; }
+  body { background: #fff; color: #000; font-family: Arial, Helvetica, sans-serif; font-size: 11pt; }
+  .print-doc { display: block !important; }
+
+  @page {
+    size: 215.9mm 355.6mm;
+    margin-top:    31mm;
+    margin-bottom: 30mm;
+    margin-left:   13mm;
+    margin-right:  16mm;
+  }
+
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+/* ── print-doc oculto en pantalla ── */
+.print-doc { display: none; }
+
+/* ═══════════════════════════════════════════════
+   CD PRINT LAYOUT
+   Replica la estructura exacta del .docx oficial
+   Ancho usable: 215.9 - 13 - 16 = 186.9mm
+═══════════════════════════════════════════════ */
+.cd-wrap {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11pt;
+  color: #000;
+  width: 186.9mm;
+}
+
+/* Tabla sin bordes, anchos fijos */
+.cd-table {
+  width: 186.9mm;
+  border-collapse: collapse;
+  table-layout: fixed;
+  border: none;
+}
+.cd-table td {
+  border: none;
+  padding: 0;
+  vertical-align: middle;
+  overflow: hidden;
+  background: transparent;
+}
+
+/* Anchos de columna — exactos al docx */
+.c0 { width:  9.5mm; }
+.c1 { width: 28.6mm; }
+.c2 { width: 31.0mm; }
+.c3 { width: 29.3mm; }
+.c4 { width: 22.7mm; }
+.c5 { width: 31.0mm; }
+.c6 { width: 35.2mm; }
+
+/* Alturas de fila — exactas al docx */
+.r-name   { height: 14.0mm; }
+.r-addr   { height:  8.0mm; }
+.r-cp     { height:  8.0mm; }
+.r-spacer { height: 61.9mm; }
+.r-name2  { height: 14.0mm; }
+.r-addr2  { height:  6.6mm; }
+.r-cp2    { height:  5.7mm; }
+
+/* Celdas de datos */
+.cd-table td.data {
+  padding-left: 1mm;
+  padding-right: 1mm;
+  font-size: 11pt;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cd-table td.name-cell {
+  font-size: 11pt;
+  font-weight: normal;
+  padding-left: 1mm;
+  vertical-align: middle;
+}
+.cd-table td.cp-cell {
+  font-size: 11pt;
+  padding-left: 1mm;
+  vertical-align: middle;
+}
+
+/* Cuerpo del texto — 9pt, sangría 10mm, igual que el docx */
+.cd-body-para {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 9pt;
+  color: #000;
+  line-height: 1.4;
+  text-align: justify;
+  margin: 0;
+  padding: 0;
+  margin-left: 10mm;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ═══ RESPONSIVE ═══ */
+@media (max-width: 768px) {
+  header { padding: 12px 16px; }
+  .privacy-banner { padding: 10px 16px; flex-direction: column; align-items: flex-start; }
+  .hero, .main { padding-left: 16px; padding-right: 16px; }
+  .hero h1 { font-size: 28px; }
+  .main { grid-template-columns: 1fr !important; padding: 20px 16px 60px; }
+  .full { grid-column: 1 !important; }
+  .card-body { padding: 14px; }
+  .row3 { grid-template-columns: 70px 1fr; }
+  .row3 > div:last-child { grid-column: 1 / -1; }
+  .brow { grid-column: 1 !important; flex-direction: column; }
+  .btn { width: 100%; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="brand">BE LEGAL <span>· SISFE Monitor</span></div>
+  <div class="badge">Carta Documento</div>
+</header>
+
+<!-- PRIVACY BANNER -->
+<div class="privacy-banner">
+  <div class="icon">🔒</div>
+  <div>
+    <strong>Tu privacidad está protegida — ningún dato es enviado ni almacenado</strong>
+    <span>Esta herramienta funciona 100% en tu navegador. Todo permanece en tu dispositivo y se borra al cerrar la página.</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="label">Generador de documentos</div>
+  <h1>CARTA DOCUMENTO</h1>
+  <p>
+    <strong>Correo Argentino · Hoja Legal</strong><br>
+    Completá los datos y generá la CD lista para imprimir sobre la plantilla oficial del Correo Argentino.
+  </p>
+</div>
+
+<!-- FORM -->
+<div class="main">
+
+  <!-- 01 REMITENTE -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-num">01</span>
+      <span class="card-title">Remitente</span>
+    </div>
+    <div class="card-body">
+      <button class="prefill-btn" onclick="prefill()">↙ Cargar datos de BE LEGAL</button>
+      <div class="fg">
+        <label>Apellido y Nombre / Razón Social</label>
+        <input type="text" id="r-nombre" placeholder="GARCÍA, JUAN CARLOS" oninput="update()">
+      </div>
+      <div class="fg">
+        <label>Domicilio</label>
+        <input type="text" id="r-dom" placeholder="Calle Nº 1234" oninput="update()">
+      </div>
+      <div class="fg">
+        <div class="row3">
+          <div class="fg" style="margin:0"><label>C.P.</label><input type="text" id="r-cp" placeholder="3000" oninput="update()"></div>
+          <div class="fg" style="margin:0"><label>Localidad</label><input type="text" id="r-loc" placeholder="Santa Fe" oninput="update()"></div>
+          <div class="fg" style="margin:0"><label>Provincia</label><input type="text" id="r-prov" placeholder="Santa Fe" oninput="update()"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 02 DESTINATARIO -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-num">02</span>
+      <span class="card-title">Destinatario</span>
+    </div>
+    <div class="card-body">
+      <div class="fg">
+        <label>Apellido y Nombre / Razón Social</label>
+        <input type="text" id="d-nombre" placeholder="PÉREZ, MARÍA FERNANDA" oninput="update()">
+      </div>
+      <div class="fg">
+        <label>Domicilio</label>
+        <input type="text" id="d-dom" placeholder="Calle Nº 5678" oninput="update()">
+      </div>
+      <div class="fg">
+        <div class="row3">
+          <div class="fg" style="margin:0"><label>C.P.</label><input type="text" id="d-cp" placeholder="3000" oninput="update()"></div>
+          <div class="fg" style="margin:0"><label>Localidad</label><input type="text" id="d-loc" placeholder="Santa Fe" oninput="update()"></div>
+          <div class="fg" style="margin:0"><label>Provincia</label><input type="text" id="d-prov" placeholder="Santa Fe" oninput="update()"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 03 CUERPO -->
+  <div class="card full">
+    <div class="card-header">
+      <span class="card-num">03</span>
+      <span class="card-title">Texto de la carta documento</span>
+    </div>
+    <div class="card-body">
+      <div class="fg">
+        <label>Cuerpo del texto</label>
+        <textarea id="cuerpo" placeholder="Redactá aquí el texto completo de la carta documento..." oninput="countChars()"></textarea>
+        <div class="char-counter" id="char-count">0 caracteres</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACCIONES -->
+  <div class="brow">
+    <button class="btn btn-primary" onclick="generar()">Generar e imprimir →</button>
+    <button class="btn btn-outline" onclick="limpiar()">✕ Limpiar</button>
+  </div>
+
+</div><!-- /main -->
+
+
+<!-- ═══════════════════════════════════════════════
+     PRINT DOCUMENT
+     Estructura exacta del .docx — no modificar medidas
+═══════════════════════════════════════════════ -->
+<div class="print-doc" id="print-doc">
+  <div class="cd-wrap">
+
+    <table class="cd-table">
+      <colgroup>
+        <col class="c0"><col class="c1"><col class="c2"><col class="c3">
+        <col class="c4"><col class="c5"><col class="c6">
+      </colgroup>
+
+      <!-- FILA 0: Nombres remitente + destinatario (14mm) -->
+      <tr class="r-name">
+        <td class="c0"></td>
+        <td colspan="3" class="name-cell" id="p-r-nombre"></td>
+        <td colspan="3" class="name-cell" id="p-d-nombre"></td>
+      </tr>
+
+      <!-- FILA 1: Domicilios (8mm) -->
+      <tr class="r-addr">
+        <td class="c0"></td>
+        <td colspan="3" class="data" id="p-r-dom"></td>
+        <td colspan="3" class="data" id="p-d-dom"></td>
+      </tr>
+
+      <!-- FILA 2: CP / Localidad / Provincia (8mm) -->
+      <tr class="r-cp">
+        <td class="c0"></td>
+        <td class="cp-cell" id="p-r-cp"></td>
+        <td class="cp-cell" id="p-r-loc"></td>
+        <td class="cp-cell" id="p-r-prov"></td>
+        <td class="cp-cell" id="p-d-cp"></td>
+        <td class="cp-cell" id="p-d-loc"></td>
+        <td class="cp-cell" id="p-d-prov"></td>
+      </tr>
+
+      <!-- FILA 3: Spacer — área en blanco del formulario (61.9mm) -->
+      <tr class="r-spacer">
+        <td colspan="7"></td>
+      </tr>
+
+      <!-- FILA 4: Nombres duplicado para acuse (14mm) -->
+      <tr class="r-name2">
+        <td class="c0"></td>
+        <td colspan="3" class="name-cell" id="p2-r-nombre"></td>
+        <td colspan="3" class="name-cell" id="p2-d-nombre"></td>
+      </tr>
+
+      <!-- FILA 5: Domicilios duplicado (6.6mm) -->
+      <tr class="r-addr2">
+        <td class="c0"></td>
+        <td colspan="3" class="data" id="p2-r-dom"></td>
+        <td colspan="3" class="data" id="p2-d-dom"></td>
+      </tr>
+
+      <!-- FILA 6: CP duplicado (5.7mm) -->
+      <tr class="r-cp2">
+        <td class="c0"></td>
+        <td class="cp-cell" id="p2-r-cp"></td>
+        <td class="cp-cell" id="p2-r-loc"></td>
+        <td class="cp-cell" id="p2-r-prov"></td>
+        <td class="cp-cell" id="p2-d-cp"></td>
+        <td class="cp-cell" id="p2-d-loc"></td>
+        <td class="cp-cell" id="p2-d-prov"></td>
+      </tr>
+
+    </table>
+
+    <!-- CUERPO: fuera de la tabla, 9pt, sangría 10mm — igual que el docx -->
+    <p class="cd-body-para" id="p-cuerpo"></p>
+
+  </div>
+</div><!-- /print-doc -->
+
+
+<footer>
+  BE LEGAL · SISFE Monitor · Carta Documento · Los datos no son enviados ni almacenados
+</footer>
+
+
+<script>
+/* ═══════════════════════════════════════════════
+   FUNCIONES — Carta Documento BE LEGAL
+═══════════════════════════════════════════════ */
+
+/** Lee el valor de un campo y elimina espacios extremos */
+function v(id) {
+  return document.getElementById(id).value.trim();
+}
+
+/** Asigna texto a un elemento del documento de impresión */
+function s(id, val) {
+  var el = document.getElementById(id);
+  if (el) el.textContent = val || '';
+}
+
+/** Carga los datos de BE LEGAL en el remitente */
+function prefill() {
+  document.getElementById('r-nombre').value = 'DIAZ ESTANISLAO JOSE';
+  document.getElementById('r-dom').value    = 'Saavedra Nº 2236';
+  document.getElementById('r-cp').value     = '3000';
+  document.getElementById('r-loc').value    = 'Santa Fe';
+  document.getElementById('r-prov').value   = 'SANTA FE';
+  update();
+}
+
+/** Sincronización en tiempo real (disponible para uso futuro) */
+function update() {
+  // Live sync opcional — la sincronización principal ocurre en generar()
+}
+
+/** Contador de caracteres del cuerpo */
+function countChars() {
+  var len = document.getElementById('cuerpo').value.length;
+  var el  = document.getElementById('char-count');
+  el.textContent  = len + ' caracteres';
+  el.className    = 'char-counter' + (len > 2000 ? ' over' : len > 1500 ? ' warn' : '');
+}
+
+/**
+ * generar() — Vuelca los datos del formulario al documento de impresión
+ * y dispara window.print().
+ * Llena tanto el original como el duplicado de acuse de recibo.
+ */
+function generar() {
+  var rNombre = v('r-nombre'), rDom  = v('r-dom'),  rCp   = v('r-cp');
+  var rLoc    = v('r-loc'),    rProv = v('r-prov');
+  var dNombre = v('d-nombre'), dDom  = v('d-dom'),  dCp   = v('d-cp');
+  var dLoc    = v('d-loc'),    dProv = v('d-prov');
+  var cuerpo  = document.getElementById('cuerpo').value.trim();
+
+  if (!rNombre || !dNombre || !cuerpo) {
+    alert('Completá al menos: nombre del remitente, nombre del destinatario y el texto.');
+    return;
+  }
+
+  // — Original —
+  s('p-r-nombre', rNombre);  s('p-r-dom',  rDom);
+  s('p-r-cp',     rCp);      s('p-r-loc',  rLoc);   s('p-r-prov',  rProv);
+  s('p-d-nombre', dNombre);  s('p-d-dom',  dDom);
+  s('p-d-cp',     dCp);      s('p-d-loc',  dLoc);   s('p-d-prov',  dProv);
+
+  // — Duplicado acuse —
+  s('p2-r-nombre', rNombre); s('p2-r-dom', rDom);
+  s('p2-r-cp',     rCp);     s('p2-r-loc', rLoc);   s('p2-r-prov', rProv);
+  s('p2-d-nombre', dNombre); s('p2-d-dom', dDom);
+  s('p2-d-cp',     dCp);     s('p2-d-loc', dLoc);   s('p2-d-prov', dProv);
+
+  // — Cuerpo —
+  s('p-cuerpo', cuerpo);
+
+  document.getElementById('print-doc').style.display = 'block';
+  setTimeout(function () {
+    window.print();
+    setTimeout(function () {
+      document.getElementById('print-doc').style.display = 'none';
+    }, 600);
+  }, 200);
+}
+
+/** limpiar() — Resetea todos los campos del formulario */
+function limpiar() {
+  ['r-nombre','r-dom','r-cp','r-loc','r-prov',
+   'd-nombre','d-dom','d-cp','d-loc','d-prov','cuerpo']
+    .forEach(function (id) { document.getElementById(id).value = ''; });
+  document.getElementById('char-count').textContent = '0 caracteres';
+  document.getElementById('char-count').className   = 'char-counter';
+}
+</script>
+
+</body>
+</html>

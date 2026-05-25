@@ -19,9 +19,10 @@ added_files = [
     ("core/config_manager.py",  "core"),
     ("core/state_manager.py",   "core"),
     ("core/updater.py",         "core"),
-    ("gui/wizard.py",           "gui"),
-    ("gui/tray.py",             "gui"),
-    ("gui/update_dialog.py",    "gui"),
+    ("gui/wizard.py",             "gui"),
+    ("gui/tray.py",               "gui"),
+    ("gui/update_dialog.py",      "gui"),
+    ("gui/carta_documento.html",  "gui"),
     ("license/validator.py",    "license"),
     ("run_agent.py",            "."),
 ]
