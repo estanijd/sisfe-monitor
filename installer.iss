@@ -41,8 +41,8 @@ WelcomeLabel2=Este asistente instalará {#MyAppName} en tu computadora.%n%nAl fi
 FinishedLabel=La instalación de {#MyAppName} fue completada exitosamente.%n%nHacé clic en Finalizar para abrir la configuración inicial.
 
 [Tasks]
-Name: "desktopicon";  Description: "Crear acceso directo en el Escritorio"; GroupDescription: "Accesos directos:"; Flags: checked
-Name: "startupicon";  Description: "Iniciar SISFE Monitor con Windows (recomendado)"; GroupDescription: "Inicio automático:"; Flags: checked
+Name: "desktopicon";  Description: "Crear acceso directo en el Escritorio"; GroupDescription: "Accesos directos:"
+Name: "startupicon";  Description: "Iniciar SISFE Monitor con Windows (recomendado)"; GroupDescription: "Inicio automático:"
 
 [Files]
 ; Todos los archivos compilados por PyInstaller
