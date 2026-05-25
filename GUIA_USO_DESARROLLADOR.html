@@ -165,12 +165,12 @@
   <h2>💰 Planes y precios</h2>
 
   <div class="card">
-    <div class="titulo">Plan Básico &nbsp;<span class="precio">u$s 100 — pago único</span></div>
-    <p>1 cuenta SISFE · Todos los horarios · Resumen diario y semanal · Detección de sentencias</p>
+    <div class="titulo">Secretario Virtual &nbsp;<span class="precio">u$s 150 — pago único (1 cuenta SISFE)</span></div>
+    <p>Base: 1 cuenta SISFE · + u$s 25 por cada cuenta adicional (mismo pago único) · Todos los horarios · Resumen diario y semanal · Detección de sentencias · Actualizaciones incluidas</p>
   </div>
-  <div class="card">
-    <div class="titulo">Plan Pro &nbsp;<span class="precio">u$s 120 — pago único</span></div>
-    <p>2 cuentas SISFE · Todos los horarios · Resumen diario y semanal · Detección de sentencias</p>
+  <div class="card" style="background:#f9f9f9; border-color:#ddd;">
+    <div class="titulo" style="font-size:13.5px; font-weight:400; color:#555;">Ejemplos rápidos</div>
+    <p style="margin-top:6px;">1 cuenta → <strong style="color:#F03010;">u$s 150</strong> &nbsp;|&nbsp; 2 cuentas → <strong style="color:#F03010;">u$s 175</strong> &nbsp;|&nbsp; 3 cuentas → <strong style="color:#F03010;">u$s 200</strong> &nbsp;|&nbsp; 4 cuentas → <strong style="color:#F03010;">u$s 225</strong></p>
   </div>
 
   <div class="box box-tip">
@@ -186,8 +186,8 @@
   <div class="steps">
     <div class="step">
       <div class="step-body">
-        <strong>Acordar el plan y cobrar</strong>
-        <p>Básico (1 cuenta) u$s 100 · Pro (2 cuentas) u$s 120. Cobrar por transferencia, Mercado Pago, etc.</p>
+        <strong>Acordar precio y cobrar</strong>
+        <p>Secretario Virtual: u$s 150 (1 cuenta) + u$s 25 por cada cuenta adicional. Cobrar por transferencia, Mercado Pago, etc.</p>
       </div>
     </div>
     <div class="step">
@@ -222,15 +222,20 @@
     <span class="cmd">cd</span> <span class="arg">/Users/estanislaodiaz/sisfe_monitor</span>
   </div>
 
-  <h3>Plan Básico — 1 cuenta — u$s 100</h3>
+  <h3>1 cuenta — u$s 150</h3>
   <div class="cmd-block">
     <span class="comment"># Reemplazá con los datos reales del cliente</span><br>
     <span class="cmd">python3</span> license/generator.py <span class="str">"Juan Perez"</span> <span class="str">"juan@gmail.com"</span> --cuentas <span class="arg">1</span>
   </div>
 
-  <h3>Plan Pro — 2 cuentas — u$s 120</h3>
+  <h3>2 cuentas — u$s 175</h3>
   <div class="cmd-block">
-    <span class="cmd">python3</span> license/generator.py <span class="str">"Maria Lopez"</span> <span class="str">"maria@gmail.com"</span>
+    <span class="cmd">python3</span> license/generator.py <span class="str">"Maria Lopez"</span> <span class="str">"maria@gmail.com"</span> --cuentas <span class="arg">2</span>
+  </div>
+
+  <h3>3 cuentas — u$s 200</h3>
+  <div class="cmd-block">
+    <span class="cmd">python3</span> license/generator.py <span class="str">"Carlos Gomez"</span> <span class="str">"carlos@gmail.com"</span> --cuentas <span class="arg">3</span>
   </div>
 
   <h3>Con fecha de vencimiento (si querés)</h3>
@@ -311,7 +316,7 @@
     <tr><td>Error de licencia</td><td>Validar el código: <code>python3 license/generator.py --validar "SISFE-..."</code></td></tr>
     <tr><td>Login SISFE falla</td><td>Verificar que el saldo de 2captcha sea mayor a u$s 0.10. Ingresar a 2captcha.com y recargar.</td></tr>
     <tr><td>No corre automáticamente</td><td>Verificar que las tareas estén en el Programador de Tareas de Windows. Si no están, abrir SISFE Monitor → Configurar → Finalizar de nuevo.</td></tr>
-    <tr><td>Quiere agregar una cuenta</td><td>Si su plan lo permite, abrir Configurar → paso Cuentas. Si necesita más cuentas, actualizar al plan Pro (generar nueva licencia).</td></tr>
+    <tr><td>Quiere agregar una cuenta</td><td>Cobrarle u$s 25 por la cuenta adicional → generar nueva licencia con --cuentas N → enviársela. Abre Configurar → paso Cuentas para agregar las credenciales.</td></tr>
   </table>
 
   <!-- ── REGISTRO ── -->

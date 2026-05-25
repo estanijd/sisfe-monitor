@@ -92,8 +92,12 @@ def main():
 
     code = generar(args.nombre, args.email, args.vence, args.cuentas)
 
-    plan = {1: "Básico — u$s 100 (1 cuenta)", 2: "Pro — u$s 120 (2 cuentas)", 5: "Premium (5 cuentas)"}.get(
-        args.cuentas, f"{args.cuentas} cuentas")
+    if args.cuentas == 1:
+        plan = "Secretario Virtual — u$s 150 (1 cuenta)"
+    else:
+        extra = args.cuentas - 1
+        total = 150 + extra * 25
+        plan = f"Secretario Virtual — u$s {total} ({args.cuentas} cuentas · 150 + {extra}×25)"
 
     print(f"""
 {'='*60}
